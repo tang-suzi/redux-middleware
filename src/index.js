@@ -1,4 +1,4 @@
-import {createStore} from './redux/index'
+import { createStore, applyMiddleware } from './redux/index'
 
 let counter = (state=0,action) => {
     if(action){
@@ -14,7 +14,13 @@ let counter = (state=0,action) => {
         return state;
     }
 }
-let store = createStore(counter);
-console.log(store.getState())
+
+let logger = store => next => action => {
+    console.log(store.getState());
+    console.log(action);
+    // next(action);
+    console.log(store.getState())
+}
+
+let store = applyMiddleware(logger)(createStore)(counter)
 store.dispatch({type:'ADD'})
-console.log(store.getState());
